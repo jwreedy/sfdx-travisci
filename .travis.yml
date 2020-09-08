@@ -28,9 +28,24 @@ script:
 - sfdx force:apex:test:run -u ciorg --wait 10
 - sfdx force:org:delete -u ciorg -p
 stages:
-- name: deploy
-    # require the branch name to be master (note for PRs this is the base branch name)
+    - test
+    - name: deploy
     if: branch = master
+
+jobs:
+    include:
+        - stage: test
+        name: Unit Tests
+        - script:
+        - sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --wait 3
+        - sfdx force:org:display -u ciorg
+        - sfdx force:source:push -u ciorg
+        - sfdx force:apex:test:run -u ciorg --wait 10
+        - sfdx force:org:delete -u ciorg -p
+        - stage: deploy
+        name: deployment
+        script:
+        # require the branch name to be master (note for PRs this is the base branch name)
         - sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
         - sfdx force:source:convert -r ./force-app/ -d ./mdapi/
         - sfdx force:mdapi:deploy -d ./mdapi -u dev
