@@ -28,14 +28,14 @@ error_handler(){
 mkdir -p logfiles
 
 # login to saandbox
-#echo "$script_name INFO: logging in to org"
+echo "$script_name INFO: logging in to org"
 sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
 
 # remove madapi directory and recreate
-#echo "$script_name INFO: Creating mdapi directory"
-#rm -r mdapi
-#sfdx force:source:convert -r ./force-app/ -d ./mdapi/
-#return_val=$?; error_handler; message="Creating mdapi directory"
+echo "$script_name INFO: Creating mdapi directory"
+rm -r mdapi
+sfdx force:source:convert -r ./force-app/ -d ./mdapi/
+return_val=$?; error_handler; message="Creating mdapi directory"
 
 # run local tests
 #echo "$script_name INFO: Running Local Tests"
