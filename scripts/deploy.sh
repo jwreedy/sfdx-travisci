@@ -28,27 +28,27 @@ error_handler(){
 mkdir -p logfiles
 
 # login to saandbox
-echo "$script_name INFO: logging in to org"
-sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
+#echo "$script_name INFO: logging in to org"
+#sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
 
 # remove madapi directory and recreate
-echo "$script_name INFO: Creating mdapi directory"
-rm -r mdapi
-sfdx force:source:convert -r ./force-app/ -d ./mdapi/
-return_val=$?; error_handler; message="Creating mdapi directory"
+#echo "$script_name INFO: Creating mdapi directory"
+#rm -r mdapi
+#sfdx force:source:convert -r ./force-app/ -d ./mdapi/
+#return_val=$?; error_handler; message="Creating mdapi directory"
 
 # run local tests
-echo "$script_name INFO: Running Local Tests"
-sfdx force:mdapi:deploy -c -d ./mdapi -u dev -w 10 >$tests_log
+#echo "$script_name INFO: Running Local Tests"
+#sfdx force:mdapi:deploy -c -d ./mdapi -u dev -w 10 >$tests_log
 #sfdx force:apex:test:run -c -u dev -r human -w 10 >$tests_log
-if grep -q 'Outcome              Failed' $tests_log; then
-  echo "$script_name ERROR: An Error occured while running local tests:"
-  grep 'Fail ' $tests_log
-  echo '$script_name ERROR: Exiting $script_name due to error(s)'
+#if grep -q 'Outcome              Failed' $tests_log; then
+#  echo "$script_name ERROR: An Error occured while running local tests:"
+#  grep 'Fail ' $tests_log
+#  echo '$script_name ERROR: Exiting $script_name due to error(s)'
   # cat local_tests.log
-  exit 1
-fi
-echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
+#  exit 1
+##fi
+#echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
 echo "$script_name INFO: Deploying to .dev Sandbox"
 sfdx force:mdapi:deploy -d ./mdapi -u dev -w 10 >$deployment_log
 if grep -q 'Error' $deployment_log; then
