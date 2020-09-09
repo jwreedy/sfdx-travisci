@@ -1,8 +1,7 @@
 public with sharing class myclass {
     public myclass() {
-    //added this comment at 2:06 pm 
+    //added this comment at 2:06 pm
     //adding this comment to test branching condition
-    //added to master  2 
     }
 
     public String getAppVersion() {
