@@ -33,6 +33,7 @@ jobs:
       #  script: bash scripts/test.sh
       #  on:
       #    branch: master
+    if: branch = master
     - stage: deploy to my sandbox
       script: bash scripts/deploy.sh
       #deploy:
