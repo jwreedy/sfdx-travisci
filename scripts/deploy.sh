@@ -25,6 +25,7 @@ error_handler(){
         exit 1
     fi
 }
+mkdir -p logfiles
 
 # login to saandbox
 echo "$script_name INFO: logging in to org"
