@@ -24,7 +24,7 @@ before_install:
 
 
 jobs:
-  include:
+    include:
     - stage: run local tests
       test:
         provider: script
