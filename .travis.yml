@@ -26,8 +26,8 @@ before_install:
 
 jobs:
     include:
-    - stage: run local tests
-      script: bash scripts/test.sh
+    #- stage: run local tests
+    #  script: bash scripts/test.sh
       #test:
       #  provider: script
       #  script: bash scripts/test.sh
