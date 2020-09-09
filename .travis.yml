@@ -29,36 +29,14 @@ script:
 - sfdx force:org:delete -u ciorg -p
 stages:
     - test
-    - name: deploy
-    if: branch = master
-
-jobs:
-    include:
-        - stage: test
-        name: Unit Tests
-        - script:
-        - sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --wait 3
-        - sfdx force:org:display -u ciorg
-        - sfdx force:source:push -u ciorg
-        - sfdx force:apex:test:run -u ciorg --wait 10
-        - sfdx force:org:delete -u ciorg -p
-        - stage: deploy
-        name: deployment
-        script:
-        # require the branch name to be master (note for PRs this is the base branch name)
-        - sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
-        - sfdx force:source:convert -r ./force-app/ -d ./mdapi/
-        - sfdx force:mdapi:deploy -d ./mdapi -u dev
-        - sfdx force:mdapi:deploy:report -w 10
-        # have not tried this to test deploy first
-        - sfdx force:apex:test:run -c -u dev -r human -w 10
-branches:
-  only:
-    - master
-    # Login to dev and push code
-    - sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
-    - sfdx force:source:convert -r ./force-app/ -d ./mdapi/
-    - sfdx force:mdapi:deploy -d ./mdapi -u dev
-    - sfdx force:mdapi:deploy:report -w 10
-    # have not tried this to test deploy first
-    - sfdx force:apex:test:run -c -u dev -r human -w 10
+    - deploy
+test:
+  provider: script
+  script: bash scripts/test.sh
+  on:
+    branch: master
+deploy:
+  provider: script
+  script: bash scripts/deploy.sh
+  on:
+    branch: master
