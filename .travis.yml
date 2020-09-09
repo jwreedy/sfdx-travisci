@@ -26,14 +26,16 @@ before_install:
 jobs:
     include:
     - stage: run local tests
-      test:
-        provider: script
-        script: bash scripts/test.sh
-        on:
-          branch: master
+      script: bash scripts/test.sh
+      #test:
+      #  provider: script
+      #  script: bash scripts/test.sh
+      #  on:
+      #    branch: master
     - stage: deploy to my sandbox
-      deploy:
-        provider: script
-        script: bash scripts/deploy.sh
-        on:
-          branch: master
+      script: bash scripts/deploy.sh
+      #deploy:
+      #  provider: script
+      #  script: bash scripts/deploy.sh
+      #  on:
+      #    branch: master
