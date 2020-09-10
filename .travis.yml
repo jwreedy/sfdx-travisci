@@ -23,8 +23,29 @@ before_install:
 - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile assets/server.key
   --username $USERNAME --setdefaultdevhubusername -a HubOrg
 
-deploy:
-  provider: script
-  script: bash scripts/test.sh
-  on:
-    branch: dev
+script: bash scripts/test.sh
+
+stages:
+  - test
+  - deploy
+
+jobs:
+    include:
+    - stage: run local tests
+      name: runniing local tests
+      script: bash scripts/test.sh
+      #test:
+      #  provider: script
+      #  script: bash scripts/test.sh
+      #  on:
+      #    branch: master
+      on:
+        branch: dev
+    - stage: deploy
+      name: deploy to dev
+      script: bash scripts/deploy.sh
+      #deploy:
+      #  provider: script
+      #  script: bash scripts/deploy.sh
+      on:
+        branch: master
