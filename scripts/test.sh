@@ -39,7 +39,7 @@ return_val=$?; error_handler; message="Creating mdapi directory"
 
 # run local tests
 echo "$script_name INFO: Running Local Tests"
-sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests -u dev -w 10 >$tests_log
+sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests --ignoreerrors -u dev -w 10 >$tests_log
 #sfdx force:apex:test:run -c -u dev -r human -w 10 >$tests_log
 if grep -q 'Failed' $tests_log; then
   echo "$script_name ERROR: An Error occured while running local tests:"
