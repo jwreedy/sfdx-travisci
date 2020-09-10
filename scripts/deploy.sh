@@ -15,7 +15,7 @@ echo "#      Deployment Log: " $deployment_log
 echo "#     mdapi Directory: " $mdapi_dir/
 echo "##########################################################################"
 echo
-
+ 
 ################################################################################
 # Error Handler
 error_handler(){
