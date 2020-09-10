@@ -32,7 +32,7 @@ mkdir -p logfiles
 # login to saandbox
 error_message="An error occurred while attempting to login to org"
 echo "$script_name INFO: logging in to org"
-sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
+sfdx force:auth:sfdxurl:store -f assets/$environment-login.txt -a $environment
 return_val=$?; error_handler
 
 # remove madapi directory and recreate
@@ -44,10 +44,10 @@ return_val=$?; error_handler
 # run local tests
 error_message="An error occured while running Local Tests - check deployment status in org for errors"
 echo "$script_name INFO: Running Local Tests"
-sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests -u dev -w 10 >$tests_log
+sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests -u $environment -w 10 >$tests_log
 return_val=$?; error_handler
 
-#sfdx force:apex:test:run -c -u dev -r human -w 10 >$tests_log
+#sfdx force:apex:test:run -c -u $environment -r human -w 10 >$tests_log
 if grep -q 'Failed\ERROR' $tests_log; then
   echo "$script_name ERROR: An Error occured while running local tests:"
   echo "**"
@@ -58,9 +58,9 @@ if grep -q 'Failed\ERROR' $tests_log; then
   exit 1
 fi
 #echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
-error_message="An error occured while attempting to deploying to dev - check deployment status in org for errors"
-echo "$script_name INFO: Deploying to .dev Sandbox"
-sfdx force:mdapi:deploy -d ./mdapi -u dev -w 10 >$deployment_log
+error_message="An error occured while attempting to deploying to $environment - check deployment status in org for errors"
+echo "$script_name INFO: Deploying to .$environment Sandbox"
+sfdx force:mdapi:deploy -d ./mdapi -u $environment -w 10 >$deployment_log
 return_val=$?; error_handler
 
 if grep -q 'Error\ERROR' $deployment_log; then
@@ -69,5 +69,5 @@ if grep -q 'Error\ERROR' $deployment_log; then
   echo '$script_name ERROR: Exiting $script_name due to error(s)'
   exit 1
 fi
-echo "$script_name SUCCESS: Sucessfully deployed metadata to .dev"
-#sfdx force:mdapi:deploy:report -w 10 -u dev
+echo "$script_name SUCCESS: Sucessfully deployed metadata to .$environment"
+#sfdx force:mdapi:deploy:report -w 10 -u $environment
