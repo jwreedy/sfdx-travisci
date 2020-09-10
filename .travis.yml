@@ -26,7 +26,6 @@ before_install:
 script: bash scripts/test.sh
 
 stages:
-  - name: test
   - name: deploy
     if: branch = master
 
