@@ -28,10 +28,11 @@ script: bash scripts/test.sh
 stages:
   - test
   - deploy
+    if: branch = master
 
 jobs:
     include:
-    - stage: run local tests
+    - stage: test
       name: runniing local tests
       script: bash scripts/test.sh
       #test:
