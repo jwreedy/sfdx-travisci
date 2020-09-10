@@ -15,7 +15,7 @@ echo "#      Deployment Log: " $deployment_log
 echo "#     mdapi Directory: " $mdapi_dir/
 echo "##########################################################################"
 echo
- 
+
 ################################################################################
 # Error Handler
 error_handler(){
@@ -39,11 +39,13 @@ return_val=$?; error_handler; message="Creating mdapi directory"
 
 # run local tests
 echo "$script_name INFO: Running Local Tests"
-sfdx force:mdapi:deploy -c -d ./mdapi -u dev -w 10 >$tests_log
+sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests -u dev -w 10 >$tests_log
 #sfdx force:apex:test:run -c -u dev -r human -w 10 >$tests_log
-if grep -q 'Outcome              Failed' $tests_log; then
+if grep -q 'Failed' $tests_log; then
   echo "$script_name ERROR: An Error occured while running local tests:"
-  grep 'Fail ' $tests_log
+  echo "**"
+  grep 'Failed' $tests_log
+  echo "**"
   echo '$script_name ERROR: Exiting $script_name due to error(s)'
   # cat local_tests.log
   exit 1
