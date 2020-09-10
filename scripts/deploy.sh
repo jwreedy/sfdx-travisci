@@ -20,7 +20,7 @@ echo
 # Error Handler
 error_handler(){
     if [[ $return_val -ne 0 ]]; then
-        echo "$script_name ERROR: $message"
+        echo "$script_name ERROR: $error_message"
         echo "$script_name INFO: Ending $script_name"
         exit 1
     fi
@@ -28,18 +28,19 @@ error_handler(){
 mkdir -p logfiles
 
 # login to saandbox
+error_message="ERROR: An error occurred while attempting to login to org"
 echo "$script_name INFO: logging in to org"
 sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
+return_val=$?; error_handler
 
 # remove madapi directory and recreate
-message="Creating mdapi directory"
+error_message="ERROR: An error occurred while attemptting to creating mdapi directory"
 echo "$script_name INFO: Creating mdapi directory"
-rm -r mdapi
 sfdx force:source:convert -r ./force-app/ -d ./mdapi/
 return_val=$?; error_handler
 
 # run local tests
-message="Running Local Tests - check deployment status in org for errors"
+error_message="ERROR: An error occured while running Local Tests - check deployment status in org for errors"
 echo "$script_name INFO: Running Local Tests"
 sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests -u dev -w 10 >$tests_log
 return_val=$?; error_handler
@@ -55,7 +56,7 @@ if grep -q 'Failed\ERROR' $tests_log; then
   exit 1
 fi
 #echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
-message="Deploying to dev - check deployment status in org for errors"
+error_message="ERROR: An error occured while attempting to deploying to dev - check deployment status in org for errors"
 echo "$script_name INFO: Deploying to .dev Sandbox"
 sfdx force:mdapi:deploy -d ./mdapi -u dev -w 10 >$deployment_log
 return_val=$?; error_handler
