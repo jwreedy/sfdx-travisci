@@ -34,7 +34,7 @@ jobs:
     include:
     - stage: run-local-tests
       name: running local tests
-      script: bash scripts/test.sh
+      script: bash scripts/test.sh dev
     - stage: deploy-dev
       name: deploying to dev
       script: bash scripts/deploy.sh dev
