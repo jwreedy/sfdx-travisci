@@ -26,9 +26,9 @@ before_install:
 script: bash scripts/test.sh
 
 stages:
-  - test
-  - deploy
-  if: branch = master
+  - name: test
+  - name: deploy
+    if: branch = master
 
 jobs:
     include:
