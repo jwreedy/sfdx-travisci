@@ -1,5 +1,6 @@
 #!/bin/bash
 script_name=`basename "$0"`
+environment=$1
 log_dir=logfiles
 scripts_dir=scripts
 tests_log=$log_dir/local_tests.log
@@ -8,6 +9,7 @@ mdapi_dir=mdapi
 
 echo "##########################################################################"
 echo "#         Script Name: " $script_name
+echo "#         Environment: " $environment
 echo "#       Log Directory: " $log_dir/
 echo "#   Scripts Directory: " $scripts_dir/
 echo "#     Local Tests Log: " $tests_log
@@ -29,7 +31,7 @@ mkdir -p logfiles
 
 # login to saandbox
 echo "$script_name INFO: logging in to org"
-sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
+sfdx force:auth:sfdxurl:store -f assets/error_message-login.txt -a $environment
 
 # remove madapi directory and recreate
 echo "$script_name INFO: Creating mdapi directory"
@@ -39,8 +41,8 @@ return_val=$?; error_handler; message="Creating mdapi directory"
 
 # run local tests
 echo "$script_name INFO: Running Local Tests"
-sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests --ignoreerrors -u dev -w 10 >$tests_log
-#sfdx force:apex:test:run -c -u dev -r human -w 10 >$tests_log
+sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests --ignoreerrors -u $environment -w 10 >$tests_log
+#sfdx force:apex:test:run -c -u $environment -r human -w 10 >$tests_log
 if grep -q 'Failed' $tests_log; then
   echo "$script_name ERROR: An Error occured while running local tests:"
   echo "**"
