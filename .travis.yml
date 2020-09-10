@@ -28,7 +28,7 @@ script: bash scripts/test.sh
 stages:
   - test
   - deploy
-    if: branch = master
+  if: branch = master
 
 jobs:
     include:
