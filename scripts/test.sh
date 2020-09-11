@@ -35,7 +35,6 @@ sfdx force:auth:sfdxurl:store -f assets/$environment-login.txt -a dev
 
 # remove madapi directory and recreate
 echo "$script_name INFO: Creating mdapi directory"
-#rm -r mdapi
 sfdx force:source:convert -r ./force-app/ -d ./mdapi/
 return_val=$?; error_handler; message="Creating mdapi directory"
 
@@ -52,14 +51,12 @@ if grep -q 'Failed' $tests_log; then
   # cat local_tests.log
   exit 1
 fi
+echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
+echo "$script_name - end of script."
 
-
-#sfdx force:auth:sfdxurl:store -f assets/dev-login.txt -a dev
-#sfdx force:source:convert -r ./force-app/ -d ./mdapi/
-#sfdx force:mdapi:deploy -c -d ./mdapi -u dev -w 10
-
-
-
+#######################################################################################
+#  Create SCratch Org to run tests
+#######################################################################################
 #sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --wait 3
 #sfdx force:org:display -u ciorg
 #sfdx force:source:push -u ciorg

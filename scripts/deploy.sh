@@ -47,7 +47,7 @@ echo "$script_name INFO: Running Local Tests"
 sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests --ignoreerrors -u $environment -w 10 >$tests_log
 return_val=$?; error_handler
 
-#sfdx force:apex:test:run -c -u $environment -r human -w 10 >$tests_log
+# check for test class method failures
 if grep -q 'Failed\ERROR' $tests_log; then
   echo "$script_name ERROR: An Error occured while running local tests:"
   echo "**"
@@ -57,7 +57,8 @@ if grep -q 'Failed\ERROR' $tests_log; then
   # cat local_tests.log
   exit 1
 fi
-#echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
+echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
+
 error_message="An error occured while attempting to deploying to $environment - check deployment status in org for errors"
 echo "$script_name INFO: Deploying to .$environment Sandbox"
 sfdx force:mdapi:deploy -d ./mdapi -u $environment -w 10 >$deployment_log
