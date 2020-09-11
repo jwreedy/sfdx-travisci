@@ -31,7 +31,7 @@ mkdir -p logfiles
 
 # login to saandbox
 echo "$script_name INFO: logging in to org"
-sfdx force:auth:sfdxurl:store -f assets/error_message-login.txt -a $environment
+sfdx force:auth:sfdxurl:store -f assets/$environment-login.txt -a dev
 
 # remove madapi directory and recreate
 echo "$script_name INFO: Creating mdapi directory"
