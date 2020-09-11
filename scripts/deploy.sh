@@ -44,7 +44,7 @@ return_val=$?; error_handler
 # run local tests
 error_message="An error occured while running Local Tests - check deployment status in org for errors"
 echo "$script_name INFO: Running Local Tests"
-sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests -u $environment -w 10 >$tests_log
+sfdx force:mdapi:deploy -c -d ./mdapi -l RunLocalTests --ignoreerrors -u $environment -w 10 >$tests_log
 return_val=$?; error_handler
 
 #sfdx force:apex:test:run -c -u $environment -r human -w 10 >$tests_log
