@@ -59,11 +59,13 @@ if grep -q 'Failed\ERROR' $tests_log; then
 fi
 echo "$script_name INFO: SUCCESS: Local Tests Successfully Completed"
 
+# deploy to Salesforce org
 error_message="An error occured while attempting to deploying to $environment - check deployment status in org for errors"
 echo "$script_name INFO: Deploying to .$environment Sandbox"
 sfdx force:mdapi:deploy -d ./mdapi -u $environment -w 10 >$deployment_log
 return_val=$?; error_handler
 
+# Check for error deploying to Salesforce org
 if grep -q 'Error\ERROR' $deployment_log; then
   echo "$script_name ERROR: An Error occured while deploying metadata"
   grep 'Error\ERROR' $deployment_log
@@ -71,4 +73,5 @@ if grep -q 'Error\ERROR' $deployment_log; then
   exit 1
 fi
 echo "$script_name SUCCESS: Sucessfully deployed metadata to .$environment"
+echo "$script_name - end of script."
 #sfdx force:mdapi:deploy:report -w 10 -u $environment
