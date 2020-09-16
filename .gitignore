@@ -12,3 +12,5 @@ test/artifacts
 *.log
 logfiles/*
 mdapi/*
+**.bak
+
