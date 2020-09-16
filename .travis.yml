@@ -1,0 +1,47 @@
+sudo: true
+os: trusty
+cache: false
+env:
+- URL=https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+before_install:
+- openssl aes-256-cbc -K $encrypted_a1e1b46722e5_key -iv $encrypted_a1e1b46722e5_iv
+  -in assets/dev-login.txt.enc -out assets/dev-login.txt -d
+- openssl aes-256-cbc -K $encrypted_79a2f6093848_key -iv $encrypted_79a2f6093848_iv
+  -in assets/server.key.enc -out assets/server.key -d
+- export SFDX_AUTOUPDATE_DISABLE=false
+- export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
+- export SFDX_DOMAIN_RETRY=300
+- export SFDX_DISABLE_APP_HUB=true
+- export SFDX_LOG_LEVEL=DEBUG
+- export SFDX_IMPROVED_CODE_COVERAGE='true'
+- mkdir sfdx
+- wget -qO- $URL | tar xJ -C sfdx --strip-components 1
+- "./sfdx/install"
+- export PATH=./sfdx/$(pwd):$PATH
+- sfdx --version
+- sfdx plugins --core
+- sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile assets/server.key
+  --username $USERNAME --setdefaultdevhubusername -a HubOrg
+
+stages:
+  - name: run-local-tests
+  - name: deploy-dev
+    if: branch = dev
+  - name: deploy-prod
+    if: branch = master
+
+jobs:
+    include:
+    - stage: run-local-tests
+      name: running local tests
+      script: bash scripts/test.sh dev
+    - stage: deploy-dev
+      name: deploying to dev
+      script: bash scripts/deploy.sh dev
+      on:
+        branch: dev
+    - stage: deploy-prod
+      name: deploying to production
+      script: bash scripts/deploy.sh prd
+      on:
+        branch: master
